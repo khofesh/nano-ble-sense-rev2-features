@@ -7,3 +7,11 @@
 */
 #pragma once
 
+#include <Arduino.h>
+
+void initSensors();
+void updateSensors();
+
+float getTemperature();
+float getHumidity();
+int getProximity();

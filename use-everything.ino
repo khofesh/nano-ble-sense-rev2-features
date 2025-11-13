@@ -1,7 +1,31 @@
+#include "sensors.h"
+#include "display.h"
+#include "ble_handler.h"
+
+const int BUTTON_PIN = 2;
+int currentMode = 0;
+// temp == 1
+// humidity == 2
+// proximity == 3
+const int NUM_MODES = 3; 
+
 void setup() {
   Serial.begin(115200);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  // init sensors, display, ble
+
+  Serial.println("system ready");
 }
 
 void loop() {
-  handleSensors();
+  static bool lastButtonState = HIGH;
+  bool buttonState = digitalRead(BUTTON_PIN);
+
+  if (buttonState == LOW && lastButtonState == HIGH) {
+    currentMode = (currentMode + 1) % NUM_MODES;
+    delay(200);
+  }
+
+  delay(100);
 }
