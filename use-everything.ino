@@ -1,6 +1,7 @@
 #include "sensors.h"
 #include "display.h"
 #include "ble_handler.h"
+#include "sensor_data.h"
 
 const int BUTTON_PIN = 2;
 int currentMode = 0;
@@ -8,6 +9,9 @@ int currentMode = 0;
 // humidity == 2
 // proximity == 3
 const int NUM_MODES = 3; 
+
+// sensor data
+SensorData sensorData = {0};
 
 void setup() {
   Serial.begin(115200);
