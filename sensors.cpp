@@ -51,31 +51,35 @@ int getProximity() {
 int getGesture() {
   if (APDS.gestureAvailable()) {
     int gesture = APDS.readGesture();
-    static char buffer[10];
 
     switch (gesture) {
       case GESTURE_UP:
         Serial.println("Detected UP gesture");
-        // sensorData.gesture = "UP";
-        strncpy(sensorData.gesture, "UP", strlen(buffer));
+        strncpy(sensorData.gesture, "UP", sizeof(sensorData.gesture) - 1);
+        sensorData.gesture[sizeof(sensorData.gesture) - 1] = '\0';
         break;
 
       case GESTURE_DOWN:
         Serial.println("Detected DOWN gesture");
-        strncpy(sensorData.gesture, "DOWN", strlen(buffer));
+        strncpy(sensorData.gesture, "DOWN", sizeof(sensorData.gesture) - 1);
+        sensorData.gesture[sizeof(sensorData.gesture) - 1] = '\0';
         break;
 
       case GESTURE_LEFT:
         Serial.println("Detected LEFT gesture");
-        strncpy(sensorData.gesture, "LEFT", strlen(buffer));
+        strncpy(sensorData.gesture, "LEFT", sizeof(sensorData.gesture) - 1);
+        sensorData.gesture[sizeof(sensorData.gesture) - 1] = '\0';
         break;
 
       case GESTURE_RIGHT:
         Serial.println("Detected RIGHT gesture");
-        strncpy(sensorData.gesture, "RIGHT", strlen(buffer));
+        strncpy(sensorData.gesture, "RIGHT", sizeof(sensorData.gesture) - 1);
+        sensorData.gesture[sizeof(sensorData.gesture) - 1] = '\0';
         break;
 
       default:
+        strncpy(sensorData.gesture, "NONE", sizeof(sensorData.gesture) - 1);
+        sensorData.gesture[sizeof(sensorData.gesture) - 1] = '\0';
         break;
     }
 
