@@ -15,12 +15,12 @@ const int NUM_MODES = 6;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
-const unsigned long debounceDelay = 200; 
+const unsigned long debounceDelay = 200;
 
 // interrupt service routine for button press
 void buttonISR() {
   unsigned long interruptTime = millis();
-  
+
   // debounce: ignore if interrupt triggered within debounceDelay
   if (interruptTime - lastInterruptTime > debounceDelay) {
     currentMode = (currentMode + 1) % NUM_MODES;
@@ -44,15 +44,29 @@ void setup() {
 
 void loop() {
   // read sensor data
-  getTemperature();
-  getHumidity();
-  getProximity();
-  getGesture();
-  getColor();
-  getPressure();
+  switch (currentMode) {
+    case 0:
+      getTemperature();
+      break;
+    case 1:
+      getHumidity();
+      break;
+    case 2:
+      getProximity();
+      break;
+    case 3:
+      getGesture();
+      break;
+    case 4:
+      getColor();
+      break;
+    case 5:
+      getPressure();
+      break;
+  }
 
   // update display with current mode
   updateDisplay(currentMode);
-  
+
   delay(100);
 }

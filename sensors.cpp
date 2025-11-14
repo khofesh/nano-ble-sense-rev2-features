@@ -25,12 +25,6 @@ void initSensors() {
     while (1)
       ;
   }
-
-  if (!BARO.begin()) {
-    Serial.println("Failed to initialize pressure sensor!");
-    while (1)
-      ;
-  }
 }
 
 void updateSensors() {
@@ -104,6 +98,14 @@ void getColor() {
   static unsigned long lastColorRead = 0;
   unsigned long currentTime = millis();
 
+  // Clear proximity/gesture data first to unblock color sensor
+  if (APDS.proximityAvailable()) {
+    APDS.readProximity();
+  }
+  if (APDS.gestureAvailable()) {
+    APDS.readGesture();
+  }
+
   // only read color every 500ms
   if (currentTime - lastColorRead >= 500) {
     if (APDS.colorAvailable()) {
@@ -139,9 +141,18 @@ void getColor() {
 }
 
 void getPressure() {
-  float pressure = BARO.readPressure(KILOPASCAL);
-
-  sensorData.pressure = pressure;
+  static unsigned long lastPressureRead = 0;
+  unsigned long currentTime = millis();
+  
+  // read every 1 seconds
+  if (currentTime - lastPressureRead >= 1000) {
+    BARO.begin();  // wake up sensor
+    delay(10);     
+    float pressure = BARO.readPressure(KILOPASCAL);
+    sensorData.pressure = pressure;
+    BARO.end();    // put sensor to sleep
+    lastPressureRead = currentTime;
+  }
 }
 
 /*
