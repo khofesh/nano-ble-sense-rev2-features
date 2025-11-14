@@ -143,14 +143,16 @@ void getColor() {
 void getPressure() {
   static unsigned long lastPressureRead = 0;
   unsigned long currentTime = millis();
-  
+
   // read every 1 seconds
   if (currentTime - lastPressureRead >= 1000) {
     BARO.begin();  // wake up sensor
-    delay(10);     
-    float pressure = BARO.readPressure(KILOPASCAL);
+    delay(10);
+    float pressure = BARO.readPressure();
+    float altitude = 44330 * (1 - pow(pressure / 101.325, 1 / 5.255));
     sensorData.pressure = pressure;
-    BARO.end();    // put sensor to sleep
+    sensorData.altitude = altitude;
+    BARO.end();  // put sensor to sleep
     lastPressureRead = currentTime;
   }
 }

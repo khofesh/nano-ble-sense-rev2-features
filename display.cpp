@@ -71,6 +71,9 @@ void updateDisplay(int mode) {
       display.println();
       display.print(sensorData.pressure, 1);
       display.println(F(" kPa"));
+      display.println();
+      display.print(sensorData.altitude, 1);
+      display.println(F(" m"));
   }
 
   display.display();
