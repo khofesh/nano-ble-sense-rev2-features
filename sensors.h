@@ -15,3 +15,4 @@ void updateSensors();
 float getTemperature();
 float getHumidity();
 int getProximity();
+int getGesture();

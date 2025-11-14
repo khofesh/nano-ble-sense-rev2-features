@@ -48,6 +48,12 @@ void updateDisplay(int mode)
       display.println();
       display.print(sensorData.proximity);
       break;
+    
+    case 3: // gesture mode
+      display.println(F("GESTURE"));
+      display.println();
+      display.print(sensorData.gesture);
+      break;
   }
 
   display.display();

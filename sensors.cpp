@@ -1,3 +1,4 @@
+#include <cstring>
 #include "sensors.h"
 #include "sensor_data.h"
 #include "Arduino_APDS9960.h"
@@ -45,6 +46,43 @@ int getProximity() {
   }
 
   return 0;
+}
+
+int getGesture() {
+  if (APDS.gestureAvailable()) {
+    int gesture = APDS.readGesture();
+    static char buffer[10];
+
+    switch (gesture) {
+      case GESTURE_UP:
+        Serial.println("Detected UP gesture");
+        // sensorData.gesture = "UP";
+        strncpy(sensorData.gesture, "UP", strlen(buffer));
+        break;
+
+      case GESTURE_DOWN:
+        Serial.println("Detected DOWN gesture");
+        strncpy(sensorData.gesture, "DOWN", strlen(buffer));
+        break;
+
+      case GESTURE_LEFT:
+        Serial.println("Detected LEFT gesture");
+        strncpy(sensorData.gesture, "LEFT", strlen(buffer));
+        break;
+
+      case GESTURE_RIGHT:
+        Serial.println("Detected RIGHT gesture");
+        strncpy(sensorData.gesture, "RIGHT", strlen(buffer));
+        break;
+
+      default:
+        break;
+    }
+
+    return gesture;
+  }
+
+  return -1;
 }
 
 /*

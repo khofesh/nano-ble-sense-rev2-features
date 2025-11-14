@@ -8,7 +8,8 @@ volatile int currentMode = 0;
 // temp == 0
 // humidity == 1
 // proximity == 2
-const int NUM_MODES = 3;
+// gesture == 3
+const int NUM_MODES = 4;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -44,6 +45,7 @@ void loop() {
   getTemperature();
   getHumidity();
   getProximity();
+  getGesture();
 
   // update display with current mode
   updateDisplay(currentMode);
