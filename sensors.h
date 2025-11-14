@@ -20,3 +20,6 @@ float getHumidity();
 int getProximity();
 int getGesture();
 void getColor();
+
+/* LPS22HB */
+void getPressure();

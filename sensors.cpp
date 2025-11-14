@@ -5,21 +5,31 @@
 #include "Arduino_APDS9960.h"
 #include "Arduino_BMI270_BMM150.h"
 #include "Arduino_HS300x.h"
+#include "Arduino_LPS22HB.h"
 
 void initSensors() {
   if (!APDS.begin()) {
     Serial.println("Error initializing APDS-9960 sensor.");
-    return;
+    while (1)
+      ;
   }
 
   if (!IMU.begin()) {
     Serial.println("Failed to initialize BMI270_BMM150!");
-    return;
+    while (1)
+      ;
   }
 
   if (!HS300x.begin()) {
     Serial.println("Failed to initialize HS3003 sensor!");
-    return;
+    while (1)
+      ;
+  }
+
+  if (!BARO.begin()) {
+    Serial.println("Failed to initialize pressure sensor!");
+    while (1)
+      ;
   }
 }
 
@@ -127,3 +137,24 @@ void getColor() {
     lastColorRead = currentTime;
   }
 }
+
+void getPressure() {
+  float pressure = BARO.readPressure(KILOPASCAL);
+
+  sensorData.pressure = pressure;
+}
+
+/*
+TODO:
+# BMI270 and BMM150
+- accelerometer
+- gyroscope
+- magnetometer
+
+# microphone
+I don't know what to do with microphone
+
+# BLE
+advertise all the sensor data
+
+*/

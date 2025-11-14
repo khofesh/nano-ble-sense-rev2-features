@@ -10,7 +10,8 @@ volatile int currentMode = 0;
 // proximity == 2
 // gesture == 3
 // color == 4
-const int NUM_MODES = 5;
+// pressure = 5
+const int NUM_MODES = 6;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -48,6 +49,7 @@ void loop() {
   getProximity();
   getGesture();
   getColor();
+  getPressure();
 
   // update display with current mode
   updateDisplay(currentMode);
