@@ -23,3 +23,6 @@ void getColor();
 
 /* LPS22HB */
 void getPressure();
+
+/* BMI270 */
+void getAccelerometer();

@@ -157,10 +157,19 @@ void getPressure() {
   }
 }
 
+void getAccelerometer() {
+  if (IMU.accelerationAvailable()) {
+    float x, y, z;
+    IMU.readAcceleration(x, y, z);
+    sensorData.accelX = x;
+    sensorData.accelY = y;
+    sensorData.accelZ = z;
+  }
+}
+
 /*
 TODO:
 # BMI270 and BMM150
-- accelerometer
 - gyroscope
 - magnetometer
 

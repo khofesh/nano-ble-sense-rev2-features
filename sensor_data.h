@@ -16,6 +16,10 @@ struct SensorData {
     /* LPS22HB */
     float pressure;
     float altitude;
+    /* BMI270 */
+    float accelX;
+    float accelY;
+    float accelZ;
 };
 
 extern SensorData sensorData; // defined in sensor_data.cpp

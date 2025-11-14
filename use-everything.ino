@@ -11,7 +11,8 @@ volatile int currentMode = 0;
 // gesture == 3
 // color == 4
 // pressure = 5
-const int NUM_MODES = 6;
+// accelerometer = 6
+const int NUM_MODES = 7;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -62,6 +63,9 @@ void loop() {
       break;
     case 5:
       getPressure();
+      break;
+    case 6:
+      getAccelerometer();
       break;
   }
 

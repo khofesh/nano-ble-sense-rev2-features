@@ -74,6 +74,18 @@ void updateDisplay(int mode) {
       display.println();
       display.print(sensorData.altitude, 1);
       display.println(F(" m"));
+      break;
+
+    case 6: 
+      display.println(F("ACCEL (g)"));
+      display.println();
+      display.print(F("X: "));
+      display.println(sensorData.accelX, 2);
+      display.print(F("Y: "));
+      display.println(sensorData.accelY, 2);
+      display.print(F("Z: "));
+      display.println(sensorData.accelZ, 2);
+      break;
   }
 
   display.display();
