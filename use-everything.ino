@@ -9,7 +9,8 @@ volatile int currentMode = 0;
 // humidity == 1
 // proximity == 2
 // gesture == 3
-const int NUM_MODES = 4;
+// color == 4
+const int NUM_MODES = 5;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;

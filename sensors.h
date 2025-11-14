@@ -12,7 +12,11 @@
 void initSensors();
 void updateSensors();
 
+/* hs3003 */
 float getTemperature();
 float getHumidity();
+
+/* apds9960 */
 int getProximity();
 int getGesture();
+void getColor();

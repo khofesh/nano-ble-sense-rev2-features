@@ -1,3 +1,4 @@
+#include "api/Common.h"
 #include <cstring>
 #include "sensors.h"
 #include "sensor_data.h"
@@ -89,8 +90,41 @@ int getGesture() {
   return -1;
 }
 
+void getColor() {
+  while (!APDS.colorAvailable()) {
+    delay(5);
+  }
+
+  int r, g, b, a;
+
+  APDS.readColor(r, g, b, a);
+  sensorData.r = r;
+  sensorData.g = g;
+  sensorData.b = b;
+  sensorData.a = a;
+
+  if (r > g & r > b) {
+    digitalWrite(LEDR, LOW);
+    digitalWrite(LEDG, HIGH);
+    digitalWrite(LEDB, HIGH);
+  } else if (g > r & g > b) {
+    digitalWrite(LEDG, LOW);
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDB, HIGH);
+  } else if (b > g & b > r) {
+    digitalWrite(LEDB, LOW);
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDG, HIGH);
+  } else {
+    digitalWrite(LEDR, HIGH);
+    digitalWrite(LEDG, HIGH);
+    digitalWrite(LEDB, HIGH);
+  }
+
+  delay(500);
+}
+
 /*
 TODO:
-- APDS9960 readGesture
 - APDS9960 readColor
 */
