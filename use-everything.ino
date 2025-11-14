@@ -47,6 +47,7 @@ void loop() {
   getHumidity();
   getProximity();
   getGesture();
+  getColor();
 
   // update display with current mode
   updateDisplay(currentMode);

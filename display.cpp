@@ -55,15 +55,16 @@ void updateDisplay(int mode)
       display.print(sensorData.gesture);
       break;
 
-    case 4: // guess color mode
+    case 4: { // color mode
       char rgba[50];
       snprintf(rgba, sizeof(rgba), 
-        "r:%d, g:%d, b:%d, a:%d", 
+        "r:%d g:%d\nb:%d a:%d", 
         sensorData.r, sensorData.g, sensorData.b, sensorData.a);
       display.println(F("COLOR"));
       display.println();
       display.print(rgba);
       break;
+    }
   }
 
   display.display();
