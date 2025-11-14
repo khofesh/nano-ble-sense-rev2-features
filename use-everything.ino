@@ -10,15 +10,13 @@ int currentMode = 0;
 // proximity == 3
 const int NUM_MODES = 3; 
 
-// sensor data
-SensorData sensorData = {0};
-
 void setup() {
   Serial.begin(115200);
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   // init sensors, display, ble
   initSensors();
+  initDisplay();
 
   Serial.println("system ready");
 }
@@ -31,6 +29,13 @@ void loop() {
     currentMode = (currentMode + 1) % NUM_MODES;
     delay(200);
   }
+  lastButtonState = buttonState;
 
-  delay(100);
+  // read sensor data
+  getTemperature();
+  getHumidity();
+  getProximity();
+
+  // Update display with current mode
+  updateDisplay(currentMode);
 }

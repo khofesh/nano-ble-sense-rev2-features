@@ -18,11 +18,10 @@ void initSensors() {
   if (!HS300x.begin()) {
     Serial.println("Failed to initialize HS3003 sensor!");
     return;
-  }  
+  }
 }
 
 void updateSensors() {
-
 }
 
 float getTemperature() {
@@ -37,6 +36,19 @@ float getHumidity() {
   return data;
 }
 
+// APDS9960 get proximity
 int getProximity() {
-  return 0.0;
+  if (APDS.proximityAvailable()) {
+    int proximity = APDS.readProximity();
+    sensorData.proximity = proximity;
+    return proximity;
+  }
+
+  return 0;
 }
+
+/*
+TODO:
+- APDS9960 readGesture
+- APDS9960 readColor
+*/
