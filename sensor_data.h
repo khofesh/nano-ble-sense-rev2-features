@@ -20,6 +20,13 @@ struct SensorData {
     float accelX;
     float accelY;
     float accelZ;
+    float gyroX;
+    float gyroY;
+    float gyroZ;
+    /* BMM150 */
+    float magX;
+    float magY;
+    float magZ;
 };
 
 extern SensorData sensorData; // defined in sensor_data.cpp

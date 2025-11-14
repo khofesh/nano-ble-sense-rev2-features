@@ -12,7 +12,9 @@ volatile int currentMode = 0;
 // color == 4
 // pressure = 5
 // accelerometer = 6
-const int NUM_MODES = 7;
+// gyroscope = 7
+// magnetometer = 8
+const int NUM_MODES = 9;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -66,6 +68,12 @@ void loop() {
       break;
     case 6:
       getAccelerometer();
+      break;
+    case 7:
+      getGyroscope();
+      break;
+    case 8:
+      getMagnetometer();
       break;
   }
 

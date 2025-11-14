@@ -167,12 +167,28 @@ void getAccelerometer() {
   }
 }
 
+void getGyroscope() {
+  if (IMU.gyroscopeAvailable()) {
+    float x, y, z;
+    IMU.readGyroscope(x, y, z);
+    sensorData.gyroX = x;
+    sensorData.gyroY = y;
+    sensorData.gyroZ = z;
+  }
+}
+
+void getMagnetometer() {
+  if (IMU.magneticFieldAvailable()) {
+    float x, y, z;
+    IMU.readMagneticField(x, y, z);
+    sensorData.magX = x;
+    sensorData.magY = y;
+    sensorData.magZ = z;
+  }
+}
+
 /*
 TODO:
-# BMI270 and BMM150
-- gyroscope
-- magnetometer
-
 # microphone
 I don't know what to do with microphone
 

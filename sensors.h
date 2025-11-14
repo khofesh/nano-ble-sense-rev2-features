@@ -26,3 +26,7 @@ void getPressure();
 
 /* BMI270 */
 void getAccelerometer();
+void getGyroscope();
+
+/* BMM150 */
+void getMagnetometer();

@@ -86,6 +86,28 @@ void updateDisplay(int mode) {
       display.print(F("Z: "));
       display.println(sensorData.accelZ, 2);
       break;
+
+    case 7:
+      display.println(F("GYRO (dps)"));
+      display.println();
+      display.print(F("X: "));
+      display.println(sensorData.gyroX, 2);
+      display.print(F("Y: "));
+      display.println(sensorData.gyroY, 2);
+      display.print(F("Z: "));
+      display.println(sensorData.gyroZ, 2);
+      break;
+
+    case 8:
+      display.println(F("MAG (uT)"));
+      display.println();
+      display.print(F("X: "));
+      display.println(sensorData.magX, 2);
+      display.print(F("Y: "));
+      display.println(sensorData.magY, 2);
+      display.print(F("Z: "));
+      display.println(sensorData.magZ, 2);
+      break;
   }
 
   display.display();
