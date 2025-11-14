@@ -18,6 +18,7 @@ void setup() {
   pinMode(BUTTON_PIN, INPUT_PULLUP);
 
   // init sensors, display, ble
+  initSensors();
 
   Serial.println("system ready");
 }
