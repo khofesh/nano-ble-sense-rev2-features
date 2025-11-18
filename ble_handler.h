@@ -3,5 +3,5 @@
 #include <ArduinoBLE.h>
 
 void initBLE();
-void updateBLE();
+void updateBLE(int mode);
 void setModeFromBLE(int mode);

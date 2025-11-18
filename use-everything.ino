@@ -41,13 +41,20 @@ void setup() {
   // init sensors, display, ble
   initSensors();
   initDisplay();
+  initBLE();
 
   Serial.println("system ready");
 }
 
 void loop() {
-  // read sensor data
-  switch (currentMode) {
+  // atomically read current mode to prevent race condition with ISR
+  int localMode;
+  noInterrupts();
+  localMode = currentMode;
+  interrupts();
+  
+  // read sensor data based on local mode snapshot
+  switch (localMode) {
     case 0:
       getTemperature();
       break;
@@ -77,8 +84,11 @@ void loop() {
       break;
   }
 
+  // update BLE with sensor data
+  updateBLE(localMode);
+
   // update display with current mode
-  updateDisplay(currentMode);
+  updateDisplay(localMode);
 
   delay(100);
 }

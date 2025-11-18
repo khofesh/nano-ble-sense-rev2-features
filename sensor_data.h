@@ -30,3 +30,7 @@ struct SensorData {
 };
 
 extern SensorData sensorData; // defined in sensor_data.cpp
+
+// thread-safe data access helpers
+void copySensorDataAtomic(SensorData* dest);
+int getCurrentModeAtomic();
