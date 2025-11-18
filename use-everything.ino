@@ -84,6 +84,9 @@ void loop() {
       break;
   }
 
+  // check for mode changes from BLE
+  setModeFromBLE(localMode);
+
   // update BLE with sensor data
   updateBLE(localMode);
 

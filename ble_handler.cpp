@@ -16,6 +16,10 @@ BLEIntCharacteristic proxChar("6e439deb-76a8-4ba2-a724-29a45466e1ac",
 BLECharacteristic gestureChar("6e439deb-76a8-4ba2-a724-29a45466e1ad",
                               BLERead | BLENotify, 10);
 
+// BLE Characteristic for mode control (Write)
+BLEIntCharacteristic modeChar("6e439deb-76a8-4ba2-a724-29a45466e1ae",
+                              BLERead | BLEWrite);
+
 void initBLE() {
   if (!BLE.begin()) {
     Serial.println("Starting BLE failed!");
@@ -32,6 +36,7 @@ void initBLE() {
   sensorService.addCharacteristic(pressChar);
   sensorService.addCharacteristic(proxChar);
   sensorService.addCharacteristic(gestureChar);
+  sensorService.addCharacteristic(modeChar);
 
   BLE.addService(sensorService);
 
@@ -41,6 +46,7 @@ void initBLE() {
   pressChar.writeValue(0.0f);
   proxChar.writeValue(0);
   gestureChar.writeValue((uint8_t*)"NONE", 4);
+  modeChar.writeValue(0);
 
   // advertising
   BLE.advertise();
@@ -51,37 +57,37 @@ void initBLE() {
 void updateBLE(int mode) {
   // check if a central device is connected
   BLEDevice central = BLE.central();
-  
+
   if (!central || !central.connected()) {
     return;
   }
-  
+
   // create local snapshot of sensor data to avoid race conditions
   SensorData localData;
   copySensorDataAtomic(&localData);
-  
+
   // only notify for the current mode to reduce BLE traffic
   switch (mode) {
-    case 0: // Temperature
+    case 0:  // Temperature
       tempChar.writeValue(localData.temperature);
       break;
-      
-    case 1: // Humidity
+
+    case 1:  // Humidity
       humidChar.writeValue(localData.humidity);
       break;
-      
-    case 2: // Proximity
+
+    case 2:  // Proximity
       proxChar.writeValue(localData.proximity);
       break;
-      
-    case 3: // Gesture
+
+    case 3:  // Gesture
       gestureChar.writeValue((uint8_t*)localData.gesture, strlen(localData.gesture));
       break;
-      
-    case 5: // Pressure
+
+    case 5:  // Pressure
       pressChar.writeValue(localData.pressure);
       break;
-      
+
     // TODO: other modes (color, accel, gyro, mag)
     default:
       break;
@@ -89,5 +95,29 @@ void updateBLE(int mode) {
 }
 
 void setModeFromBLE(int mode) {
-  // todo: allow BLE client to change mode
+  BLEDevice central = BLE.central();
+
+  if (!central || !central.connected()) {
+    return;
+  }
+
+  // check if mode characteristic was written to
+  if (modeChar.written()) {
+    int newMode = modeChar.value();
+
+    // validate mode is within valid range (0-8)
+    if (newMode >= 0 && newMode < 9) {
+      // update the mode (extern variable from main sketch)
+      extern volatile int currentMode;
+      noInterrupts();
+      currentMode = newMode;
+      interrupts();
+
+      Serial.print("Mode changed via BLE to: ");
+      Serial.println(newMode);
+    } else {
+      Serial.print("Invalid mode received via BLE: ");
+      Serial.println(newMode);
+    }
+  }
 }
