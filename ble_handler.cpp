@@ -1,3 +1,5 @@
+#include "BLEProperty.h"
+#include "BLECharacteristic.h"
 #include "ble_handler.h"
 #include "sensor_data.h"
 
@@ -17,6 +19,19 @@ BLECharacteristic gestureChar("6e439deb-76a8-4ba2-a724-29a45466e1ad",
 BLEIntCharacteristic modeChar("6e439deb-76a8-4ba2-a724-29a45466e1ae",
                               BLERead | BLEWrite);
 
+// color (RGBA) - 16 bytes (4 ints)
+BLECharacteristic colorChar("1d3aa889-eb6f-4ff0-8321-1fd97e10f448",
+                            BLERead | BLENotify, 16);
+// accell
+BLECharacteristic accelChar("75b6fecb-31d7-425d-8ee4-4d85701f6843",
+                            BLERead | BLENotify, 12);
+// gyro
+BLECharacteristic gyroChar("b6c3897b-e7bb-473e-afcf-c322357dd7ee",
+                           BLERead | BLENotify, 12);
+// magnetometer
+BLECharacteristic magChar("49f371bf-bc07-4047-a5df-56a306476493",
+                          BLERead | BLENotify, 12);
+
 void initBLE() {
   if (!BLE.begin()) {
     Serial.println("Starting BLE failed!");
@@ -32,15 +47,27 @@ void initBLE() {
   sensorService.addCharacteristic(proxChar);
   sensorService.addCharacteristic(gestureChar);
   sensorService.addCharacteristic(modeChar);
+  sensorService.addCharacteristic(colorChar);
+  sensorService.addCharacteristic(accelChar);
+  sensorService.addCharacteristic(gyroChar);
+  sensorService.addCharacteristic(magChar);
 
   BLE.addService(sensorService);
 
   // set initial values
-  float envData[3] = {0.0f, 0.0f, 0.0f};
+  float envData[3] = { 0.0f, 0.0f, 0.0f };
   envChar.writeValue((uint8_t*)envData, 12);
   proxChar.writeValue(0);
   gestureChar.writeValue((uint8_t*)"NONE", 4);
   modeChar.writeValue(0);
+  int colorData[4] = { 0, 0, 0, 0 };
+  colorChar.writeValue((uint8_t*)colorData, 16);
+  float accelData[3] = {0.0f, 0.0f, 0.0f};
+  accelChar.writeValue((uint8_t*)accelData, 12);
+  float gyroData[3] = {0.0f, 0.0f, 0.0f};
+  gyroChar.writeValue((uint8_t*)gyroData, 12);
+  float magData[3] = {0.0f, 0.0f, 0.0f};
+  magChar.writeValue((uint8_t*)magData, 12);
 
   // advertising
   BLE.advertise();
@@ -81,7 +108,51 @@ void updateBLE(int mode) {
       gestureChar.writeValue((uint8_t*)localData.gesture, strlen(localData.gesture));
       break;
 
-    // TODO: other modes (color, accel, gyro, mag)
+    case 3:  // Color (RGBA)
+      {
+        int colorData[4] = {
+          localData.r,
+          localData.g,
+          localData.b,
+          localData.a
+        };
+        colorChar.writeValue((uint8_t*)colorData, 16);
+      }
+      break;
+
+    case 4:  // accelerometer
+      {
+        float accelData[3] = {
+          localData.accelX,
+          localData.accelY,
+          localData.accelZ
+        };
+        accelChar.writeValue((uint8_t*)accelData, 12);
+      }
+      break;
+
+    case 5:  //  gyro
+      {
+        float gyroData[3] = {
+          localData.gyroX,
+          localData.gyroY,
+          localData.gyroZ
+        };
+        gyroChar.writeValue((uint8_t*)gyroData, 12);
+      }
+      break;
+
+    case 6: // magnetometer
+      {
+        float magData[3] = {
+          localData.magX,
+          localData.magY,
+          localData.magZ
+        };
+        magChar.writeValue((uint8_t*)magData, 12);
+      }
+      break;
+
     default:
       break;
   }
