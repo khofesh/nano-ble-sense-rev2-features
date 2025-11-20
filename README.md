@@ -18,3 +18,16 @@ features:
 nRF connect:
 
 ![nrf connect](./6118512369123134636.jpg)
+
+## Mode Reference
+
+| Mode | Sensor Type   | Description                 |
+| ---- | ------------- | --------------------------- |
+| 0    | Environmental | Temp + Humidity + Pressure  |
+| 1    | Proximity     | Distance sensor             |
+| 2    | Gesture       | Up/Down/Left/Right gestures |
+| 3    | Color         | RGB color sensor            |
+| 4    | Accelerometer | 3-axis acceleration         |
+| 5    | Gyroscope     | 3-axis rotation             |
+| 6    | Magnetometer  | 3-axis magnetic field       |
+| 7    | Microphone    | microphone sensor           |

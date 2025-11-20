@@ -31,6 +31,9 @@ BLECharacteristic gyroChar("b6c3897b-e7bb-473e-afcf-c322357dd7ee",
 // magnetometer
 BLECharacteristic magChar("49f371bf-bc07-4047-a5df-56a306476493",
                           BLERead | BLENotify, 12);
+// microphone (level + peak) - 8 bytes (2 ints)
+BLECharacteristic micChar("8c4e2f63-0e5d-4c89-a19e-6b9c3d8f2a47",
+                          BLERead | BLENotify, 8);
 
 void initBLE() {
   if (!BLE.begin()) {
@@ -51,6 +54,7 @@ void initBLE() {
   sensorService.addCharacteristic(accelChar);
   sensorService.addCharacteristic(gyroChar);
   sensorService.addCharacteristic(magChar);
+  sensorService.addCharacteristic(micChar);
 
   BLE.addService(sensorService);
 
@@ -68,6 +72,8 @@ void initBLE() {
   gyroChar.writeValue((uint8_t*)gyroData, 12);
   float magData[3] = {0.0f, 0.0f, 0.0f};
   magChar.writeValue((uint8_t*)magData, 12);
+  int micData[2] = {0, 0};
+  micChar.writeValue((uint8_t*)micData, 8);
 
   // advertising
   BLE.advertise();
@@ -153,6 +159,16 @@ void updateBLE(int mode) {
       }
       break;
 
+    case 7:  // Microphone (level + peak)
+      {
+        int micData[2] = {
+          localData.micLevel,
+          localData.micPeak
+        };
+        micChar.writeValue((uint8_t*)micData, 8);
+      }
+      break;
+
     default:
       break;
   }
@@ -169,8 +185,8 @@ void setModeFromBLE(int mode) {
   if (modeChar.written()) {
     int newMode = modeChar.value();
 
-    // validate mode is within valid range (0-6)
-    if (newMode >= 0 && newMode < 7) {
+    // validate mode is within valid range (0-7)
+    if (newMode >= 0 && newMode < 8) {
       // update the mode (extern variable from main sketch)
       extern volatile int currentMode;
       noInterrupts();

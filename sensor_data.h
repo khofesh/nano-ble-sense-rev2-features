@@ -27,6 +27,9 @@ struct SensorData {
     float magX;
     float magY;
     float magZ;
+    /* PDM Microphone */
+    int micLevel;  // average sound level
+    int micPeak;   // peak sound level
 };
 
 extern SensorData sensorData; // defined in sensor_data.cpp

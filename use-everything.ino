@@ -2,6 +2,7 @@
 #include "display.h"
 #include "ble_handler.h"
 #include "sensor_data.h"
+#include "microphone.h"
 
 const int BUTTON_PIN = 2;
 volatile int currentMode = 0;
@@ -12,7 +13,8 @@ volatile int currentMode = 0;
 // accelerometer = 4
 // gyroscope = 5
 // magnetometer = 6
-const int NUM_MODES = 7;
+// microphone = 7
+const int NUM_MODES = 8;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -36,10 +38,11 @@ void setup() {
   // attach interrupt on falling edge (button press)
   attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonISR, FALLING);
 
-  // init sensors, display, ble
+  // init sensors, display, ble, microphone
   initSensors();
   initDisplay();
   initBLE();
+  initMicrophone();
 
   Serial.println("system ready");
 }
@@ -75,6 +78,9 @@ void loop() {
       break;
     case 6:
       getMagnetometer();
+      break;
+    case 7:
+      updateMicrophone();
       break;
   }
 

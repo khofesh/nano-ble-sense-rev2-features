@@ -113,6 +113,15 @@ void updateDisplay(int mode) {
       display.print(F("Z: "));
       display.println(localData.magZ, 2);
       break;
+
+    case 7:  // Microphone mode
+      display.println(F("MICROPHONE"));
+      display.println();
+      display.print(F("Level: "));
+      display.println(localData.micLevel);
+      display.print(F("Peak: "));
+      display.println(localData.micPeak);
+      break;
   }
 
   display.display();
