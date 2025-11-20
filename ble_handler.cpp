@@ -49,12 +49,13 @@ void initBLE() {
   sensorService.addCharacteristic(envChar);
   sensorService.addCharacteristic(proxChar);
   sensorService.addCharacteristic(gestureChar);
-  sensorService.addCharacteristic(modeChar);
   sensorService.addCharacteristic(colorChar);
   sensorService.addCharacteristic(accelChar);
   sensorService.addCharacteristic(gyroChar);
   sensorService.addCharacteristic(magChar);
   sensorService.addCharacteristic(micChar);
+  
+  sensorService.addCharacteristic(modeChar);
 
   BLE.addService(sensorService);
 

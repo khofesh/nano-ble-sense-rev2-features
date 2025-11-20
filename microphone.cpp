@@ -54,6 +54,24 @@ void updateMicrophone() {
       if (absValue > peak) {
         peak = absValue;
       }
+
+      if (sampleBuffer[i]>=500){
+        digitalWrite(LEDR,LOW);
+        digitalWrite(LEDG,HIGH);
+        digitalWrite(LEDB,HIGH);
+      }
+      // check if the sound value is higher than 250 and lower than 500
+      if (sampleBuffer[i]>=250 && sampleBuffer[i] < 500){
+        digitalWrite(LEDB,LOW);
+        digitalWrite(LEDR,HIGH);
+        digitalWrite(LEDG,HIGH);
+      }
+      //check if the sound value is higher than 0 and lower than 250
+      if (sampleBuffer[i]>=0 && sampleBuffer[i] < 250){
+        digitalWrite(LEDG,LOW);
+        digitalWrite(LEDR,HIGH);
+        digitalWrite(LEDB,HIGH);
+      }
     }
     
     int average = samplesRead > 0 ? sum / samplesRead : 0;
