@@ -4,13 +4,10 @@
 // BLE Service
 BLEService sensorService("750e28e3-1b71-4f3b-85f6-732d98faa60a");
 
-// BLE Characteristics (Read + Notify) - separate for each sensor type
-BLEFloatCharacteristic tempChar("6e439deb-76a8-4ba2-a724-29a45466e1a9",
-                                BLERead | BLENotify);
-BLEFloatCharacteristic humidChar("6e439deb-76a8-4ba2-a724-29a45466e1aa",
-                                 BLERead | BLENotify);
-BLEFloatCharacteristic pressChar("6e439deb-76a8-4ba2-a724-29a45466e1ab",
-                                 BLERead | BLENotify);
+// BLE Characteristics (Read + Notify)
+// Combined environmental characteristic (temp, humidity, pressure) - 12 bytes (3 floats)
+BLECharacteristic envChar("6e439deb-76a8-4ba2-a724-29a45466e1a9",
+                          BLERead | BLENotify, 12);
 BLEIntCharacteristic proxChar("6e439deb-76a8-4ba2-a724-29a45466e1ac",
                               BLERead | BLENotify);
 BLECharacteristic gestureChar("6e439deb-76a8-4ba2-a724-29a45466e1ad",
@@ -31,9 +28,7 @@ void initBLE() {
   BLE.setAdvertisedService(sensorService);
 
   // add characteristics to service
-  sensorService.addCharacteristic(tempChar);
-  sensorService.addCharacteristic(humidChar);
-  sensorService.addCharacteristic(pressChar);
+  sensorService.addCharacteristic(envChar);
   sensorService.addCharacteristic(proxChar);
   sensorService.addCharacteristic(gestureChar);
   sensorService.addCharacteristic(modeChar);
@@ -41,9 +36,8 @@ void initBLE() {
   BLE.addService(sensorService);
 
   // set initial values
-  tempChar.writeValue(0.0f);
-  humidChar.writeValue(0.0f);
-  pressChar.writeValue(0.0f);
+  float envData[3] = {0.0f, 0.0f, 0.0f};
+  envChar.writeValue((uint8_t*)envData, 12);
   proxChar.writeValue(0);
   gestureChar.writeValue((uint8_t*)"NONE", 4);
   modeChar.writeValue(0);
@@ -68,24 +62,23 @@ void updateBLE(int mode) {
 
   // only notify for the current mode to reduce BLE traffic
   switch (mode) {
-    case 0:  // Temperature
-      tempChar.writeValue(localData.temperature);
+    case 0:  // Environment (temp + humidity + pressure)
+      {
+        float envData[3] = {
+          localData.temperature,
+          localData.humidity,
+          localData.pressure
+        };
+        envChar.writeValue((uint8_t*)envData, 12);
+      }
       break;
 
-    case 1:  // Humidity
-      humidChar.writeValue(localData.humidity);
-      break;
-
-    case 2:  // Proximity
+    case 1:  // Proximity
       proxChar.writeValue(localData.proximity);
       break;
 
-    case 3:  // Gesture
+    case 2:  // Gesture
       gestureChar.writeValue((uint8_t*)localData.gesture, strlen(localData.gesture));
-      break;
-
-    case 5:  // Pressure
-      pressChar.writeValue(localData.pressure);
       break;
 
     // TODO: other modes (color, accel, gyro, mag)
@@ -105,8 +98,8 @@ void setModeFromBLE(int mode) {
   if (modeChar.written()) {
     int newMode = modeChar.value();
 
-    // validate mode is within valid range (0-8)
-    if (newMode >= 0 && newMode < 9) {
+    // validate mode is within valid range (0-6)
+    if (newMode >= 0 && newMode < 7) {
       // update the mode (extern variable from main sketch)
       extern volatile int currentMode;
       noInterrupts();

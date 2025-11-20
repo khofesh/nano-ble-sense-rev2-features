@@ -45,33 +45,31 @@ void updateDisplay(int mode) {
   display.setCursor(0, 0);
 
   switch (mode) {
-    case 0:  // Temperature mode
-      display.println(F("TEMP"));
-      display.println();
+    case 0:  // Environmental mode (temp + humidity + pressure)
+      display.println(F("ENVIRONMENT"));
       display.print(localData.temperature, 1);
-      display.println(F(" C"));
+      display.print(F("C "));
+      display.print(localData.humidity, 0);
+      display.println(F("%"));
+      display.print(localData.pressure, 1);
+      display.println(F(" kPa"));
+      display.print(localData.altitude, 0);
+      display.println(F(" m"));
       break;
 
-    case 1:  // Humidity mode
-      display.println(F("HUMIDITY"));
-      display.println();
-      display.print(localData.humidity, 1);
-      display.println(F(" %"));
-      break;
-
-    case 2:  // Proximity mode
+    case 1:  // Proximity mode
       display.println(F("PROXIMITY"));
       display.println();
       display.print(localData.proximity);
       break;
 
-    case 3:  // gesture mode
+    case 2:  // gesture mode
       display.println(F("GESTURE"));
       display.println();
       display.print(localData.gesture);
       break;
 
-    case 4:
+    case 3:
       {  // color mode
         char rgba[50];
         snprintf(rgba, sizeof(rgba),
@@ -83,17 +81,7 @@ void updateDisplay(int mode) {
         break;
       }
 
-    case 5:
-      display.println(F("PRESSURE"));
-      display.println();
-      display.print(localData.pressure, 1);
-      display.println(F(" kPa"));
-      display.println();
-      display.print(localData.altitude, 1);
-      display.println(F(" m"));
-      break;
-
-    case 6: 
+    case 4: 
       display.println(F("ACCEL (g)"));
       display.println();
       display.print(F("X: "));
@@ -104,7 +92,7 @@ void updateDisplay(int mode) {
       display.println(localData.accelZ, 2);
       break;
 
-    case 7:
+    case 5:
       display.println(F("GYRO (dps)"));
       display.println();
       display.print(F("X: "));
@@ -115,7 +103,7 @@ void updateDisplay(int mode) {
       display.println(localData.gyroZ, 2);
       break;
 
-    case 8:
+    case 6:
       display.println(F("MAG (uT)"));
       display.println();
       display.print(F("X: "));

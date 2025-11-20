@@ -5,16 +5,14 @@
 
 const int BUTTON_PIN = 2;
 volatile int currentMode = 0;
-// temp == 0
-// humidity == 1
-// proximity == 2
-// gesture == 3
-// color == 4
-// pressure = 5
-// accelerometer = 6
-// gyroscope = 7
-// magnetometer = 8
-const int NUM_MODES = 9;
+// temp + humidity + pressure == 0
+// proximity == 1
+// gesture == 2
+// color == 3
+// accelerometer = 4
+// gyroscope = 5
+// magnetometer = 6
+const int NUM_MODES = 7;
 
 // debouncing variables
 volatile unsigned long lastInterruptTime = 0;
@@ -57,29 +55,25 @@ void loop() {
   switch (localMode) {
     case 0:
       getTemperature();
-      break;
-    case 1:
       getHumidity();
-      break;
-    case 2:
-      getProximity();
-      break;
-    case 3:
-      getGesture();
-      break;
-    case 4:
-      getColor();
-      break;
-    case 5:
       getPressure();
       break;
-    case 6:
+    case 1:
+      getProximity();
+      break;
+    case 2:
+      getGesture();
+      break;
+    case 3:
+      getColor();
+      break;
+    case 4:
       getAccelerometer();
       break;
-    case 7:
+    case 5:
       getGyroscope();
       break;
-    case 8:
+    case 6:
       getMagnetometer();
       break;
   }
