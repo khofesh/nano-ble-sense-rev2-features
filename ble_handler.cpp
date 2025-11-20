@@ -34,6 +34,9 @@ BLECharacteristic magChar("49f371bf-bc07-4047-a5df-56a306476493",
 // microphone (level + peak) - 8 bytes (2 ints)
 BLECharacteristic micChar("8c4e2f63-0e5d-4c89-a19e-6b9c3d8f2a47",
                           BLERead | BLENotify, 8);
+// orientation - 4 bytes (1 int)
+BLEIntCharacteristic orientationChar("a3c87500-8ed3-4bdf-8a39-a01bebede295",
+                                     BLERead | BLENotify);
 
 void initBLE() {
   if (!BLE.begin()) {
@@ -54,6 +57,7 @@ void initBLE() {
   sensorService.addCharacteristic(gyroChar);
   sensorService.addCharacteristic(magChar);
   sensorService.addCharacteristic(micChar);
+  sensorService.addCharacteristic(orientationChar);
   
   sensorService.addCharacteristic(modeChar);
 
@@ -75,6 +79,7 @@ void initBLE() {
   magChar.writeValue((uint8_t*)magData, 12);
   int micData[2] = {0, 0};
   micChar.writeValue((uint8_t*)micData, 8);
+  orientationChar.writeValue(0);
 
   // advertising
   BLE.advertise();
@@ -135,6 +140,9 @@ void updateBLE(int mode) {
           localData.accelZ
         };
         accelChar.writeValue((uint8_t*)accelData, 12);
+        
+        // Also send orientation when in accelerometer mode
+        orientationChar.writeValue(localData.orientation);
       }
       break;
 

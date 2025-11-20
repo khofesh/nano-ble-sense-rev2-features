@@ -3,6 +3,7 @@
 #include "ble_handler.h"
 #include "sensor_data.h"
 #include "microphone.h"
+#include "power_management.h"
 
 const int BUTTON_PIN = 2;
 volatile int currentMode = 0;
@@ -54,6 +55,9 @@ void loop() {
   localMode = currentMode;
   interrupts();
   
+  // sleep unused sensors to save power
+  sleepUnusedSensors(localMode);
+  
   // read sensor data based on local mode snapshot
   switch (localMode) {
     case 0:
@@ -93,5 +97,6 @@ void loop() {
   // update display with current mode
   updateDisplay(localMode);
 
-  delay(100);
+  // use light sleep instead of delay for power saving
+  enterLightSleep(100);
 }

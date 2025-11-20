@@ -1,5 +1,6 @@
 #include "display.h"
 #include "sensor_data.h"
+#include "orientation.h"
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
@@ -83,13 +84,15 @@ void updateDisplay(int mode) {
 
     case 4: 
       display.println(F("ACCEL (g)"));
-      display.println();
       display.print(F("X: "));
-      display.println(localData.accelX, 2);
-      display.print(F("Y: "));
+      display.print(localData.accelX, 2);
+      display.print(F(" Y: "));
       display.println(localData.accelY, 2);
       display.print(F("Z: "));
       display.println(localData.accelZ, 2);
+      display.println();
+      display.print(F("Orient: "));
+      display.println(getOrientationString());
       break;
 
     case 5:

@@ -2,6 +2,7 @@
 #include <cstring>
 #include "sensors.h"
 #include "sensor_data.h"
+#include "orientation.h"
 #include "Arduino_APDS9960.h"
 #include "Arduino_BMI270_BMM150.h"
 #include "Arduino_HS300x.h"
@@ -164,6 +165,10 @@ void getAccelerometer() {
     sensorData.accelX = x;
     sensorData.accelY = y;
     sensorData.accelZ = z;
+    
+    // Update orientation based on accelerometer data
+    updateOrientation();
+    sensorData.orientation = (int)getOrientation();
   }
 }
 

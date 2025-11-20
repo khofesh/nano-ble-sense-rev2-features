@@ -30,6 +30,8 @@ struct SensorData {
     /* PDM Microphone */
     int micLevel;  // average sound level
     int micPeak;   // peak sound level
+    /* Orientation (derived from accelerometer) */
+    int orientation;  // 0-6: unknown, face-up, face-down, portrait, portrait-ud, landscape-l, landscape-r
 };
 
 extern SensorData sensorData; // defined in sensor_data.cpp
