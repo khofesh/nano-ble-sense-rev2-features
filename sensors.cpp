@@ -118,20 +118,33 @@ void getColor() {
       sensorData.b = b;
       sensorData.a = a;
 
-      // set onboard LED to dominant color
-      if (r > g && r > b) {
-        digitalWrite(LEDR, LOW);
-        digitalWrite(LEDG, HIGH);
-        digitalWrite(LEDB, HIGH);
-      } else if (g > r && g > b) {
-        digitalWrite(LEDG, LOW);
-        digitalWrite(LEDR, HIGH);
-        digitalWrite(LEDB, HIGH);
-      } else if (b > g && b > r) {
-        digitalWrite(LEDB, LOW);
-        digitalWrite(LEDR, HIGH);
-        digitalWrite(LEDG, HIGH);
+      // Imitate the actual color using RGB ratios and Clear intensity
+      if (a > 10) {  // Only display if there's measurable light
+        // Find the maximum RGB value to normalize ratios
+        int maxRGB = max(max(r, g), b);
+        
+        if (maxRGB > 0) {
+          // Map Clear intensity to LED brightness (0-255)
+          // APDS9960 Clear channel typically ranges 0-10000+
+          int brightness = constrain(map(a, 0, 5000, 0, 255), 0, 255);
+          
+          // Calculate each LED channel: maintain RGB ratios, scale by brightness
+          // Invert for common-anode (255 = off, 0 = full on)
+          int redLED = 255 - ((r * brightness) / maxRGB);
+          int greenLED = 255 - ((g * brightness) / maxRGB);
+          int blueLED = 255 - ((b * brightness) / maxRGB);
+          
+          analogWrite(LEDR, redLED);
+          analogWrite(LEDG, greenLED);
+          analogWrite(LEDB, blueLED);
+        } else {
+          // No color detected, turn off
+          digitalWrite(LEDR, HIGH);
+          digitalWrite(LEDG, HIGH);
+          digitalWrite(LEDB, HIGH);
+        }
       } else {
+        // Too dark, turn off LED
         digitalWrite(LEDR, HIGH);
         digitalWrite(LEDG, HIGH);
         digitalWrite(LEDB, HIGH);
@@ -165,7 +178,7 @@ void getAccelerometer() {
     sensorData.accelX = x;
     sensorData.accelY = y;
     sensorData.accelZ = z;
-    
+
     // Update orientation based on accelerometer data
     updateOrientation();
     sensorData.orientation = (int)getOrientation();

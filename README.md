@@ -19,6 +19,10 @@ nRF connect:
 
 ![nrf connect](./6118512369123134636.jpg)
 
+without grove shield
+
+![without grove](./6181726157347163174.jpg)
+
 ## Mode Reference
 
 | Mode | Sensor Type   | Description                 |
