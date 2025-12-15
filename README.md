@@ -35,3 +35,11 @@ without grove shield
 | 5    | Gyroscope     | 3-axis rotation             |
 | 6    | Magnetometer  | 3-axis magnetic field       |
 | 7    | Microphone    | microphone sensor           |
+
+## references
+
+- https://wiki.seeedstudio.com/Grove_LoRa_E5_New_Version/
+
+## TODO
+
+- [ ] Lorawan connection
